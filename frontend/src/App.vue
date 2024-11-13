@@ -7,7 +7,6 @@
   </header>
 
   <main>
-    <!-- Router outlet for dynamic routing -->
     <router-view />
   </main>
 </template>

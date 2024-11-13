@@ -1,4 +1,4 @@
-name: Deploy Spring Boot App
+name: Deploy Spring and VueJS App
 
 on:
   push:
@@ -102,7 +102,7 @@ jobs:
       - name: Deploy Spring Boot App
         working-directory: ./backend
         env:
-          FLY_API_BACKEND_TOKEN: ${{ secrets.FLY_API_BACKEND_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_BACKEND_TOKEN }}
         run: |
           flyctl deploy --remote-only
 
@@ -119,9 +119,9 @@ jobs:
       - name: Set up Fly CLI
         uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: Deploy Angular App
+      - name: Deploy VueJS App
         working-directory: ./frontend
         env:
-          FLY_API_FRONTEND_TOKEN: ${{ secrets.FLY_API_FRONTEND_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.FLY_API_FRONTEND_TOKEN }}
         run: |
           flyctl deploy --remote-only

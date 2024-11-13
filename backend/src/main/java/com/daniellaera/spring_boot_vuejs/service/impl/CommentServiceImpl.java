@@ -43,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getAllCommentsByPostId(Long postId) {
+        // todo check possible for null?
         //Optional<Post> post = postRepository.findById(postId);
         //if (post.isEmpty()) {
         //    throw new RuntimeException("Post not found");

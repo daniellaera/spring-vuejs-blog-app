@@ -3,6 +3,7 @@
 [![versionspringboot](https://img.shields.io/badge/springboot-3.3.5-brightgreen)](https://github.com/spring-projects/spring-boot)
 [![versionjava](https://img.shields.io/badge/jdk-21-brightgreen.svg?logo=java)](https://github.com/spring-projects/spring-boot)
 [![versionvuejs](https://img.shields.io/badge/vuejs-3.5.12-brightgreen.svg?logo=vue.js)](https://vuejs.org/)
+![Coverage](https://raw.githubusercontent.com/daniellaera/spring-vuejs-blog-app/badges/badges/jacoco.svg)
 
 <div style="width: 50%; margin: auto;">
   <img src="screenshots/banner_image_spring_vue.jpg" alt="localhost-first-run" style="width: 100%;"/>

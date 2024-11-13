@@ -5,7 +5,6 @@
     <!-- AddPost component for creating new posts -->
     <AddPost @postAdded="refreshPosts" />
 
-    <!-- If no posts, display an alert -->
     <div v-if="posts.length === 0" class="alert alert-info">
       No posts available.
     </div>
