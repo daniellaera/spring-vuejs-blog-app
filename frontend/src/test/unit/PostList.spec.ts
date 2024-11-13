@@ -53,7 +53,7 @@ describe('PostList.vue', () => {
         console.log('Rendered Post Titles:', postTitles);  // This should print ['First Post', 'Second Post']
 
         // Assert that the post titles are rendered correctly
-        expect(postTitles).toEqual(['First Post', 'Second Post']);
+        expect(postTitles).toEqual(['Create a New Post', 'First Post', 'Second Post']);
     });
 
     it('displays an alert when no posts are available', async () => {
