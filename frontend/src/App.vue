@@ -33,7 +33,7 @@ header {
     margin: 0;
   }
 
-  header .wrapper {
+  header {
     display: flex;
     place-items: flex-start;
     flex-wrap: wrap;
