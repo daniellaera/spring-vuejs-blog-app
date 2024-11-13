@@ -2,6 +2,9 @@
   <div class="container mt-5">
     <h1 class="text-center mb-4">Posts</h1>
 
+    <!-- AddPost component for creating new posts -->
+    <AddPost @postAdded="refreshPosts" />
+
     <!-- If no posts, display an alert -->
     <div v-if="posts.length === 0" class="alert alert-info">
       No posts available.
@@ -9,11 +12,7 @@
 
     <!-- Post cards -->
     <div class="row justify-content-center">
-      <div
-          v-for="post in posts"
-          :key="post.id"
-          class="col-md-4 mb-4"
-      >
+      <div v-for="post in posts" :key="post.id" class="col-md-4 mb-4">
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">{{ post.title }}</h5>
@@ -27,7 +26,7 @@
 
               <!-- Display comment count badge with comment icon -->
               <span v-if="post.comments && post.comments.length > 0" class="badge bg-info d-flex align-items-center">
-                <i class="bi bi-chat-dots me-1"></i> <!-- Bootstrap Icons chat icon -->
+                <i class="bi bi-chat-dots me-1"></i>
                 {{ post.comments.length }}
               </span>
             </div>
@@ -40,38 +39,35 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import apiClient from '@/plugins/axiosConfig'; // Import the Axios instance
+import apiClient from '@/plugins/axiosConfig';
 
-interface Comment {
-  text: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  comments: Comment[];  // Include the comments array
-}
+import type { Post } from '@/types/post';
+import AddPost from './AddPost.vue';
 
 export default defineComponent({
   name: 'PostList',
+  components: { AddPost },
   setup() {
-    const posts = ref<Post[]>([]); // Array to store posts
+    const posts = ref<Post[]>([]);
 
-    // Fetch posts using Axios instance
+    // Fetch posts from the server
     const fetchPosts = async () => {
       try {
-        const response = await apiClient.get('/post');  // Update if needed for your API endpoint
-        posts.value = response.data;  // Store fetched posts
+        const response = await apiClient.get('/post');
+        posts.value = response.data;
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
 
-    // Call fetchPosts when the component is mounted
+    // Called when a new post is added in AddPost
+    const refreshPosts = () => {
+      fetchPosts();
+    };
+
     onMounted(fetchPosts);
 
-    return { posts };
+    return { posts, refreshPosts };
   },
 });
 </script>

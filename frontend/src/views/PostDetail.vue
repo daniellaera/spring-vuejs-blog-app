@@ -7,12 +7,23 @@
       <p>Loading post...</p>
     </div>
 
-    <!-- Display the post details if available -->
+    <!-- Display the post details or the edit form based on editMode -->
     <div v-else>
-      <div class="card mb-4">
+      <div v-if="!editMode" class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
           <p class="card-text">{{ post.content }}</p>
+          <button class="btn btn-primary mt-4" @click="editMode = true">Edit Post</button>
+        </div>
+      </div>
+
+      <!-- Edit Form -->
+      <div v-else class="card mb-4">
+        <div class="card-body">
+          <input v-model="editedPost.title" placeholder="Edit title" class="form-control mb-2" />
+          <textarea v-model="editedPost.content" placeholder="Edit content" class="form-control mb-2"></textarea>
+          <button class="btn btn-success mt-2" @click="updatePost">Save Changes</button>
+          <button class="btn btn-secondary mt-2" @click="cancelEdit">Cancel</button>
         </div>
       </div>
 
@@ -25,7 +36,6 @@
         </div>
       </div>
 
-      <!-- If no comments, show a message -->
       <div v-else>
         <p>No comments yet. Be the first to comment!</p>
       </div>
@@ -38,49 +48,66 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import apiClient from '@/plugins/axiosConfig';  // Import the Axios instance
-import { useRoute, useRouter } from 'vue-router';  // Use Vue Router to access route params and router methods
-
-interface Comment {
-  text: string;
-  // If you have an author for comments, you could also include:
-  // author: string;
-}
-
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  comments: Comment[];  // Include comments array
-}
+import apiClient from '@/plugins/axiosConfig';
+import { useRoute, useRouter } from 'vue-router';
+import type {Post} from "@/types/post";
 
 export default defineComponent({
   name: 'PostDetail',
   setup() {
-    const post = ref<Post | null>(null); // Store post details
-    const route = useRoute();  // Access the current route
-    const router = useRouter();  // Access the router instance
-    const postId = route.params.id as string;  // Get the post ID from route params
+    const post = ref<Post | null>(null);
+    const editMode = ref(false);
+    const editedPost = ref({ title: '', content: '' });
+    const route = useRoute();
+    const router = useRouter();
+    const postId = route.params.id as string;
 
-    // Fetch post details based on post ID
     const fetchPostDetails = async () => {
       try {
         const response = await apiClient.get(`/post/${postId}`);
-        post.value = response.data;  // Store fetched post details
+        post.value = response.data;
       } catch (error) {
         console.error('Error fetching post details:', error);
       }
     };
 
-    // Function to go back to the previous page
-    const goBack = () => {
-      router.back();  // Navigate back to the previous page
+    const updatePost = async () => {
+      if (post.value) {
+        try {
+          const response = await apiClient.put(`/post/${postId}`, {
+            title: editedPost.value.title,
+            content: editedPost.value.content,
+          });
+          post.value = response.data;
+          editMode.value = false;
+        } catch (error) {
+          console.error('Error updating post:', error);
+        }
+      }
     };
 
-    // Call fetchPostDetails when the component is mounted
-    onMounted(fetchPostDetails);
+    const cancelEdit = () => {
+      if (post.value) {
+        editedPost.value.title = post.value.title;
+        editedPost.value.content = post.value.content;
+        editMode.value = false;
+      }
+    };
 
-    return { post, goBack };
+    const goBack = () => {
+      router.back();
+    };
+
+    onMounted(() => {
+      fetchPostDetails().then(() => {
+        if (post.value) {
+          editedPost.value.title = post.value.title;
+          editedPost.value.content = post.value.content;
+        }
+      });
+    });
+
+    return { post, editMode, editedPost, goBack, updatePost, cancelEdit };
   },
 });
 </script>
@@ -106,7 +133,6 @@ export default defineComponent({
   color: #555;
 }
 
-/* Comments section */
 .comment-box {
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -116,16 +142,9 @@ export default defineComponent({
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.comment-box p {
-  margin: 0;
-}
-
-/* Styling for the "Back" button */
 button {
   padding: 8px 15px;
   font-size: 1rem;
-  text-align: center;
-  margin-top: 20px;
 }
 
 button:hover {

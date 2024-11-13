@@ -4,7 +4,9 @@
 [![versionjava](https://img.shields.io/badge/jdk-21-brightgreen.svg?logo=java)](https://github.com/spring-projects/spring-boot)
 [![versionvuejs](https://img.shields.io/badge/vuejs-3.5.12-brightgreen.svg?logo=vue.js)](https://vuejs.org/)
 
-![localhost-first-run](screenshots/banner_image_spring_vue.jpg)
+<div style="width: 50%; margin: auto;">
+  <img src="screenshots/banner_image_spring_vue.jpg" alt="localhost-first-run" style="width: 100%;"/>
+</div>
 
 
 This project consists of a **Spring Boot** backend and a **VueJS** frontend, forming a full-stack blog application. It allows users to create, read, update, and delete blog posts, and also comment on each post.

@@ -14,13 +14,12 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
         // Allow multiple origins: development and production
         List<String> allowedOrigins = Arrays.asList(
-                "http://localhost:5173"  // Local development
-                //"prod frontend url"  // Production frontend URL
+                "http://localhost:5173",  // Local development
+                "https://spring-vue-blog-frontend.fly.dev"  // Production frontend URL
         );
         corsConfiguration.setAllowedOrigins(allowedOrigins);
 
