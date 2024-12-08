@@ -5,12 +5,21 @@
     <!-- AddPost component for creating new posts -->
     <AddPost @postAdded="refreshPosts" />
 
-    <div v-if="posts.length === 0" class="alert alert-info">
+    <!-- Loading message with spinner -->
+    <div v-if="loading" class="text-center my-4">
+      <p>The backend is in hybrid mode and is waking up for the first request, please be patient...</p>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- No posts message -->
+    <div v-else-if="posts.length === 0" class="alert alert-info">
       No posts available.
     </div>
 
     <!-- Post cards -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" v-else>
       <div v-for="post in posts" :key="post.id" class="col-md-4 mb-4">
         <div class="card h-100">
           <div class="card-body">
@@ -48,14 +57,18 @@ export default defineComponent({
   components: { AddPost },
   setup() {
     const posts = ref<Post[]>([]);
+    const loading = ref<boolean>(true);
 
     // Fetch posts from the server
     const fetchPosts = async () => {
+      loading.value = true; // Set loading to true while fetching data
       try {
         const response = await apiClient.get('/post');
         posts.value = response.data;
       } catch (error) {
         console.error('Error fetching posts:', error);
+      } finally {
+        loading.value = false; // Hide loading message once data is fetched
       }
     };
 
@@ -66,7 +79,7 @@ export default defineComponent({
 
     onMounted(fetchPosts);
 
-    return { posts, refreshPosts };
+    return { posts, loading, refreshPosts };
   },
 });
 </script>
@@ -121,12 +134,18 @@ export default defineComponent({
   align-items: center;
 }
 
-/* Margin between button and badge */
-.me-2 {
-  margin-right: 0.5rem;
+/* Center spinner and message */
+.text-center {
+  text-align: center;
 }
 
-.me-1 {
-  margin-right: 0.25rem;
+.my-4 {
+  margin: 1.5rem 0;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  margin-top: 1rem;
 }
 </style>

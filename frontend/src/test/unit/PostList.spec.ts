@@ -57,22 +57,25 @@ describe('PostList.vue', () => {
     });
 
     it('displays an alert when no posts are available', async () => {
-        // Mock the API response to return an empty array of posts
+        // Mock the API response to return an empty array
         vi.mocked(apiClient.get).mockResolvedValueOnce({ data: [] });
 
-        // Mount the component with router mock and stubbing RouterLink
+        // Mount the component
         const wrapper = mount(PostList, {
             global: {
                 stubs: {
-                    RouterLink: RouterLinkStub,  // Stub RouterLink to avoid Vue warnings
+                    RouterLink: RouterLinkStub, // Stub RouterLink to avoid warnings
                 },
             },
         });
 
-        // Wait for the next DOM update cycle after API call
-        await wrapper.vm.$nextTick(); // Ensures the DOM is updated after the API response
+        // Wait for the API call to complete and the DOM to update
+        await wrapper.vm.$nextTick(); // Wait for initial reactivity to process
+        await wrapper.vm.$nextTick(); // Wait again to ensure DOM has updated
 
-        // Assert that the "No posts available" alert is displayed
-        expect(wrapper.text()).toContain('No posts available.');
+        // Assert that the "No posts available." alert is displayed
+        const alertMessage = wrapper.find('.alert.alert-info'); // Target specific element
+        expect(alertMessage.exists()).toBe(true); // Ensure the element exists
+        expect(alertMessage.text()).toBe('No posts available.'); // Check for the correct message
     });
 });
