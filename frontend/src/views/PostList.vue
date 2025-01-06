@@ -68,7 +68,7 @@ export default defineComponent({
       } catch (error) {
         console.error('Error fetching posts:', error);
       } finally {
-        loading.value = false; // Hide loading message once data is fetched
+        loading.value = false;
       }
     };
 
